@@ -14,7 +14,7 @@ let socketClient = 0;
 
 ////////////////////////////////
 
-let createSocketClients = function(value = 1) {
+let createSocketClients = function (value = 1) {
     for (let i = 0; i < value; i++) {
         socketClients[i] = dgram.createSocket('udp4');
     };
@@ -22,14 +22,14 @@ let createSocketClients = function(value = 1) {
     return true;
 };
 
-let getSocketClient = function() {
-	socketClient = socketClient + 1;
+let getSocketClient = function () {
+    socketClient = socketClient + 1;
 
-	if (socketClient >= socketClients.length) {
-		socketClient = 0;
-	};
+    if (socketClient >= socketClients.length) {
+        socketClient = 0;
+    };
 
-	return socketClients[socketClient];
+    return socketClients[socketClient];
 };
 
 // let chr = function (n) {
@@ -40,107 +40,100 @@ let getSocketClient = function() {
 //     };
 // };
 
-let ord = function ( str ) {
-	let ch = str.charCodeAt(0);
+let ord = function (str) {
+    let ch = str.charCodeAt(0);
 
-	if (ch > 0xFF) {
-		ch -= 0x350;
-	};
+    if (ch > 0xFF) {
+        ch -= 0x350;
+    };
 
-	return ch;
+    return ch;
 };
 
-let requestInfo = function(ip, port) {
-	return new Promise(
-		function(resolve, reject) {
-			let client = getSocketClient();
+let requestInfo = function (ip, port) {
+    return new Promise(
+        function (resolve, reject) {
+            let client = getSocketClient();
+            let endListenerTask, errorListener, messageListener, timeoutInterval;
 
-			client.connect(port + 123, ip, (err) => {
-				console.log(`connected`);
+            endListenerTask = function() {
+                try {
+                    client.disconnect();
+                } catch (e) {
+                };
 
-				let timeoutInterval = setTimeout(
-					function() {
-						try {
-							client.disconnect();
-						} catch(e) {							
-						};
-						
-						timeoutInterval = false;
-						resolve(false);
-					}, 15 * 1000
-				);
-			
-				client.send(Buffer.from(`s`), (err) => {	
-					client.on('message', function (receiveData) {
-						try {
-							client.disconnect();
-						} catch(e) {							
-						};
-						
-						if (timeoutInterval === false) {
-							resolve(false);
-							return;
-						};
+                if (timeoutInterval !== false) {
+                    clearTimeout(timeoutInterval);
+                    timeoutInterval = false;
+                };
+                
+                client.removeListener('message', messageListener);
+                client.removeListener('error', errorListener);
+            };
 
-						let index = 0;					
-						let tag = receiveData.subarray(index, index += 4).toString('utf-8');
-						
-						if (tag != `EYE1`) {
-							return false;
-						};
-						
-						let dataLength, data; 
-						let info = [];
-			
-						for (let i = 0; i < 9; i++) {				
-							dataLength = ord(receiveData.subarray(index, index += 1).toString('utf-8'));
-							data = receiveData.subarray(index, (index += (dataLength - 1))).toString('utf-8');		
-							info[i] = data;
-						};
+            errorListener = function () {
+                endListenerTask();
+                resolve(false);
+            };
 
-						clearTimeout(timeoutInterval);
-						timeoutInterval = false;
+            messageListener = function (receiveData) {
+                endListenerTask();
 
-						let returnTable = {
-							name: info[2],
-							gamemode: info[3],
-							map: info[4],
-							version: info[5],
-							private: info[6] == `1`,
-							players: info[7],
-							max_players: info[8]
-						};
+                let index = 0;
+                let tag = receiveData.subarray(index, index += 4).toString('utf-8');
 
-						if (info[0] != `mta`) {
-							resolve(false);
-							return;
-						};
+                if (tag != `EYE1`) {
+                    return false;
+                };
 
-						resolve(returnTable);			
-					});
-				});
-			});
-			
-			client.on('error', function() {
-				try {
-					client.disconnect();
-				} catch(e) {							
-				};
-						
-				if (timeoutInterval === false) {
-					resolve(false);
-					return;
-				};
-						
-				clearTimeout(timeoutInterval);
-				timeoutInterval = false;
-				resolve(false);
-			});
-		}
-	);
+                let dataLength, data;
+                let info = [];
+
+                for (let i = 0; i < 9; i++) {
+                    dataLength = ord(receiveData.subarray(index, index += 1).toString('utf-8'));
+                    data = receiveData.subarray(index, (index += (dataLength - 1))).toString('utf-8');
+                    info[i] = data;
+                };
+
+                let returnTable = {
+                    name: info[2],
+                    gamemode: info[3],
+                    map: info[4],
+                    version: info[5],
+                    private: info[6] == `1`,
+                    players: info[7],
+                    max_players: info[8]
+                };
+
+                if (info[0] != `mta`) {
+                    resolve(false);
+                    return;
+                };
+
+                resolve(returnTable);
+            };
+
+            client.connect(port + 123, ip, (err) => {
+                console.log(`connected`);
+
+                timeoutInterval = setTimeout(
+                    function () {
+                        endListenerTask();
+                        resolve(false);
+                    }, 15 * 1000
+                );
+
+                client.send(Buffer.from(`s`), (err) => {
+                    client.on('message', messageListener);
+                });
+            });
+
+            client.on('error', errorListener);
+        }
+    );
 };
 
 module.exports = {
-	getStatus: requestInfo,
-	createSocket: createSocketClients,
+    getStatus: requestInfo,
+    createSocket: createSocketClients,
 };

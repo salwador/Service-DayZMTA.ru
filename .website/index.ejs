@@ -1,0 +1,140 @@
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="./css/floatingcircles.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.nextapi.ru/fontawesome/init.js" type="text/javascript" async></script>
+
+    <style>
+        @font-face {
+            font-family: 'ComfortaaFont';
+            src: url('./fonts/comfortaa.ttf') format('truetype');
+        }
+
+        /**********************************/
+
+        * {
+            font-family: Quicksand;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        html {
+            background: rgb(68, 79, 150);
+            background: linear-gradient(0deg, rgb(62, 89, 209) 0%, rgb(42, 195, 255) 100%);
+            background-attachment: fixed;
+            overflow: hidden;
+        }
+
+        body {
+            display: flex;
+            flex-wrap: nowrap;
+            flex-direction: column;
+            align-content: center;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-content: center;
+            align-items: center;
+            flex-wrap: nowrap;
+            height: 100%;
+        }
+
+        a {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 0.2rem 0.5rem 0.3rem 0.5rem;
+            border-radius: 0.2rem;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        a {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        a:hover {
+            color: rgb(255, 255, 255);
+        }
+
+        .maintext {
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 0px 0px 7px rgba(0, 0, 0, 0.75);
+            font-size: 3.7rem;
+            font-family: "ComfortaaFont";
+        }
+
+        .downtext {
+            color: rgba(239, 239, 239, 0.95);
+            text-shadow: 0px 0px 5px rgb(0, 0, 0);
+            font-size: 1.75rem;
+        }
+
+        .year {
+            font-size: 1.1rem;
+        }
+
+        .subdowntext {
+            margin-top: -0.2rem;
+            color: rgba(239, 239, 239, 0.95);
+            text-shadow: 0px 0px 5px rgb(0, 0, 0);
+            font-size: 1.5rem;
+        }
+
+        .projectstext {
+            width: 30vw;
+            min-width: 350px;
+
+            color: rgba(239, 239, 239, 0.95);
+            text-shadow: 0px 0px 1px rgb(0, 0, 0), 0px 0px 4px rgb(0, 0, 0);
+            font-size: 1rem;
+        }
+
+        .projectstext {
+            margin-top: 2rem;
+            line-height: 2rem;
+            text-align: center;
+        }
+
+        .projectstext.large {
+            text-shadow: 0px 0px 2px rgb(0, 0, 0);
+            font-size: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <ul class='circles'>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+
+        <div class="maintext center">
+            service.dayzmta.ru
+        </div>
+        <div class="downtext center">
+            be a silent, it's a secret...
+        </div>
+    </div>
+</body>
+
+</html>

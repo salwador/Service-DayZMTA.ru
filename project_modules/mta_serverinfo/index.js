@@ -114,7 +114,7 @@ let requestInfo = function (ip, port) {
             };
 
             client.connect(port + 123, ip, (err) => {
-                console.log(`connected`);
+                // console.log(`connected`);
 
                 timeoutInterval = setTimeout(
                     function () {

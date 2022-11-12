@@ -24,19 +24,21 @@ global.Globals = {};
 
 ////////////////////////////////
 
+MTAInfo.createSocket(16);
+
+////////////////////////////////
+
 require(`./pages.js`);
 require(`./bases_api.js`);
 require(`./mta_infoapi.js`);
+require(`./vk_widget_dayz.js`);
+require(`./vk_widget_zero.js`);
 
 ////////////////////////////////
 
 // process.__defineGetter__('stderr', function(a) { 
 // 	return fs.createWriteStream(__dirname + '/error.log', {flags:'a'}) 
 // })
-
-////////////////////////////////
-
-MTAInfo.createSocket(16);
 
 ////////////////////////////////
 

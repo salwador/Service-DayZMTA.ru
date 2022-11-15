@@ -1,3 +1,7 @@
+Log.Info(`Loading module "cache_info"...`);
+
+////////////////////////////////
+
 const cacheInfo = new Map();
 
 const getCacheInfo = async function (name, callback, time = 60000, isScheduler) {
@@ -64,3 +68,7 @@ module.exports = {
 	getSync: getCacheSyncInfo,
 	schedule: scheduleCacheInfo,
 };
+
+////////////////////////////////
+
+Log.Success(`Successfully loading module "logger_main".`);

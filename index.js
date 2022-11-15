@@ -1,11 +1,37 @@
+console.log("Starting project...")
+
+////////////////////////////////
+
+const Log = global.Log = require(`./project_modules/logger_main/index.js`);
+const CacheInfo = global.CacheInfo = require(`./project_modules/cache_info/index.js`);
+const MTAInfo = global.MTAInfo = require(`./project_modules/mta_serverinfo/index.js`);
+
+const ServerFast = require(`./project_modules/server_fast/index.js`);
+
+////////////////////////////////
+
+Log.Info("Loading Node.JS modules...")
+
 const fs = require(`fs`);
 const fetch = require(`node-fetch`);
 
-const CacheInfo = require(`./project_modules/cache_info/index.js`);
-const ServerFast = require(`./project_modules/server_fast/index.js`);
-const MTAInfo = require(`./project_modules/mta_serverinfo/index.js`);
+Log.Success("Successfully loading Node.JS modules.")
+
+////////////////////////////////
+
+Log.Info("Starting Express Web-Server...")
 
 const { express, app, addPage, addGetAPI, finalInitializing } = new ServerFast(33010);
+
+Log.Success("Express Web-Server successfully started.")
+
+////////////////////////////////
+
+Log.Info("Init sockets for MTA sockets...")
+
+MTAInfo.createSocket(16);
+
+Log.Success("MTA sockets successfully initialized.")
 
 ////////////////////////////////
 
@@ -14,9 +40,6 @@ global.Express = {
 	addGetAPI: addGetAPI
 }
 
-global.CacheInfo = CacheInfo;
-global.MTAInfo = MTAInfo;
-
 ////////////////////////////////
 
 global.EJSMethods = {};
@@ -24,15 +47,19 @@ global.Globals = {};
 
 ////////////////////////////////
 
-MTAInfo.createSocket(16);
+fs.readdirSync(`./.includes/`).forEach(
+	function (file) {
+		try {
+			Log.Info(`Loading include "${file}"...`);
 
-////////////////////////////////
+			require(`./.includes/${file}`);
 
-require(`./pages.js`);
-require(`./bases_api.js`);
-require(`./mta_infoapi.js`);
-require(`./vk_widget_dayz.js`);
-require(`./vk_widget_zero.js`);
+			Log.Success(`Successfully loading include.`);
+		} catch(e) {
+			Log.Error(`Include can't be loaded.`, e.toString());
+		};
+	}
+);
 
 ////////////////////////////////
 
@@ -43,3 +70,5 @@ require(`./vk_widget_zero.js`);
 ////////////////////////////////
 
 finalInitializing();
+
+Log.Success("Project starting fully completed!")

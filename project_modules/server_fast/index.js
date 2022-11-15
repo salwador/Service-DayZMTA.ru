@@ -1,3 +1,7 @@
+Log.Info(`Loading module "server_fast"...`);
+
+////////////////////////////////
+
 class Server {
     constructor(port) {
         const isDev = (new Set(process.argv)).has(`--devmode`);
@@ -69,3 +73,7 @@ class Server {
 };
 
 module.exports = Server;
+
+////////////////////////////////
+
+Log.Success(`Successfully loading module "server_fast".`);

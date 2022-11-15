@@ -1,3 +1,6 @@
+Log.Info(`Loading module "mta_serverinfo"...`);
+
+////////////////////////////////
 
 const iconv = require(`iconv-lite`);
 const dgram = require(`dgram`);
@@ -137,3 +140,7 @@ module.exports = {
     getStatus: requestInfo,
     createSocket: createSocketClients,
 };
+
+////////////////////////////////
+
+Log.Success(`Successfully loading module "mta_serverinfo".`);

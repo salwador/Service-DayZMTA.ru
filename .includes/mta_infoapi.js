@@ -42,12 +42,18 @@ let fillCacheRequestMTAServersList = async function () {
 ////////////////////////////////
 
 Express.addGetAPI(`/api/getServersList`, async function (req, res) {
+	let clientIP = req.headers[`x-real-ip`] || req.socket.remoteAddress.split(`:`)[3];
+	Log.Info(`"${clientIP}" is request MTA servers list.`);
+
 	let serversInfo = await CacheInfo.get(`requestMTAServersList`, fillCacheRequestMTAServersList, 30000);
 
 	res.send(serversInfo.serversList);
 });
 
 Express.addGetAPI(`/api/getServerInfo`, async function (req, res) {
+	let clientIP = req.headers[`x-real-ip`] || req.socket.remoteAddress.split(`:`)[3];
+	Log.Info(`"${clientIP}" is request info of server "${req.query.ip}:"${req.query.port}.`);
+
 	let ip = req.query.ip;
 	let port = req.query.port;
 

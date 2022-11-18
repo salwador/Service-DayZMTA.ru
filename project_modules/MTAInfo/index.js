@@ -1,4 +1,8 @@
-Log.Info(`Loading module "mta_serverinfo"...`);
+const Log = require(`./../Logger/index.js`)
+
+////////////////////////////////
+
+Log.Info(`Loading module "MTAInfo"...`);
 
 ////////////////////////////////
 
@@ -6,6 +10,9 @@ const iconv = require(`iconv-lite`);
 const dgram = require(`dgram`);
 
 // const { performance } = require('perf_hooks');
+
+////////////////////////////////
+
 const { Buffer } = require(`buffer`);
 // const { escape, unescape } = require('querystring');
 
@@ -136,6 +143,8 @@ let requestInfo = function (ip, port) {
     );
 };
 
+createSocketClients(16);
+
 module.exports = {
     getStatus: requestInfo,
     createSocket: createSocketClients,
@@ -143,4 +152,4 @@ module.exports = {
 
 ////////////////////////////////
 
-Log.Success(`Successfully loading module "mta_serverinfo".`);
+Log.Success(`Successfully loading module "MTAInfo".`);

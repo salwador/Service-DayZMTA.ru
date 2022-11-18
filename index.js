@@ -2,11 +2,8 @@ console.log("Starting project...")
 
 ////////////////////////////////
 
-const Log = global.Log = require(`./project_modules/logger_main/index.js`);
-const CacheInfo = global.CacheInfo = require(`./project_modules/cache_info/index.js`);
-const MTAInfo = global.MTAInfo = require(`./project_modules/mta_serverinfo/index.js`);
-
-const ServerFast = require(`./project_modules/server_fast/index.js`);
+const Log = require(`./project_modules/Logger/index.js`);
+const SmartServer = require(`./project_modules/SmartServer/index.js`);
 
 ////////////////////////////////
 
@@ -21,15 +18,13 @@ Log.Success("Successfully loading Node.JS modules.")
 
 Log.Info("Starting Express Web-Server...")
 
-const { express, app, addPage, addGetAPI, finalInitializing } = new ServerFast(33010);
+const { express, app, addPage, addGetAPI, finalInitializing } = new SmartServer(33010);
 
 Log.Success("Express Web-Server successfully started.")
 
 ////////////////////////////////
 
 Log.Info("Init sockets for MTA sockets...")
-
-MTAInfo.createSocket(16);
 
 Log.Success("MTA sockets successfully initialized.")
 

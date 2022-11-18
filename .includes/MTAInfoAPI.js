@@ -1,3 +1,9 @@
+const Log = require(`../project_modules/Logger/index.js`)
+const Cache = require("../project_modules/Cache/index.js");
+const MTAInfo = require("../project_modules/MTAInfo/index.js");
+
+////////////////////////////////
+
 const fetch = require(`node-fetch`);
 
 ////////////////////////////////
@@ -42,22 +48,22 @@ let fillCacheRequestMTAServersList = async function () {
 ////////////////////////////////
 
 Express.addGetAPI(`/api/getServersList`, async function (req, res) {
-	let clientIP = req.headers[`x-real-ip`] || req.socket.remoteAddress.split(`:`)[3];
+	let clientIP = req.headers[`cf-connecting-ip`] || req.headers[`x-real-ip`] || req.socket.remoteAddress.split(`:`)[3];
 	Log.Info(`"${clientIP}" is request MTA servers list.`);
 
-	let serversInfo = await CacheInfo.get(`requestMTAServersList`, fillCacheRequestMTAServersList, 30000);
+	let serversInfo = await Cache.get(`requestMTAServersList`, fillCacheRequestMTAServersList, 30000);
 
 	res.send(serversInfo.serversList);
 });
 
 Express.addGetAPI(`/api/getServerInfo`, async function (req, res) {
-	let clientIP = req.headers[`x-real-ip`] || req.socket.remoteAddress.split(`:`)[3];
-	Log.Info(`"${clientIP}" is request info of server "${req.query.ip}:"${req.query.port}.`);
+	let clientIP = req.headers[`cf-connecting-ip`] || req.headers[`x-real-ip`] || req.socket.remoteAddress.split(`:`)[3];
+	Log.Info(`"${clientIP}" is request info of server "${req.query.ip}:${req.query.port}".`);
 
 	let ip = req.query.ip;
 	let port = req.query.port;
 
-	if (!ip || !port) {
+	if (!ip || !port) {s		
 		return res.send({
             error: `"ip" or "port" parameters not exists`
         });
@@ -71,7 +77,7 @@ Express.addGetAPI(`/api/getServerInfo`, async function (req, res) {
         });
 	};
 
-	let serverInfo = await CacheInfo.get(`requestMTAServer_${ip}_${port}`, async function () {
+	let serverInfo = await Cache.get(`requestMTAServer_${ip}_${port}`, async function () {
 		return await MTAInfo.getStatus(ip, port);
 	}, 30000);
 

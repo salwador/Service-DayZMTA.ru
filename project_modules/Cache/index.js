@@ -1,4 +1,8 @@
-Log.Info(`Loading module "cache_info"...`);
+const Log = require(`./../Logger/index.js`)
+
+////////////////////////////////
+
+Log.Info(`Loading module "Cache"...`);
 
 ////////////////////////////////
 
@@ -71,4 +75,4 @@ module.exports = {
 
 ////////////////////////////////
 
-Log.Success(`Successfully loading module "logger_main".`);
+Log.Success(`Successfully loading module "Cache".`);

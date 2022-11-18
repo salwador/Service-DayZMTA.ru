@@ -1,4 +1,12 @@
-Log.Info(`Loading module "server_fast"...`);
+const Log = require(`./../Logger/index.js`)
+
+////////////////////////////////
+
+Log.Info(`Loading module "SmartServer"...`);
+
+////////////////////////////////
+
+const launchedServers = {};
 
 ////////////////////////////////
 
@@ -46,17 +54,51 @@ class Server {
         this.app = app;
 
         this.addPage = function (adress, callback) {
-            [``, `index`, `index.html`, `index.php`, `index.htm`].forEach(
+            if (typeof(adress) == `object`) {
+                for (let i of adress) {
+                    this.addPage(i, callback)
+                };
+
+                return;
+            };
+
+            app.get(`${adress}`, callback);
+
+            [`index`, `index.html`, `index.php`, `index.htm`].forEach(
                 async function (dir) {
-                    app.get(`${adress}${dir}`, callback);
+                    let pathLength = `${adress}${dir}`.length;
+
+                    app.get(`${adress}${dir}`, 
+                        function(req, res) {
+                            let getQuery = req.originalUrl.substring(pathLength, req.originalUrl.length)
+                            res.redirect(307, `${adress}${getQuery}`);
+                        }
+                    );
                 }
             );
         };
 
         this.addGetAPI = function (adress, callback) {
-            [``, `.php`, `.html`, `.htm`].forEach(
+            if (typeof(adress) == `object`) {
+                for (let i of adress) {
+                    this.addGetAPI(i, callback)
+                };
+                
+                return;
+            };
+
+            app.get(`${adress}`, callback);
+
+            [`.php`, `.html`, `.htm`].forEach(
                 async function (dir) {
-                    app.get(`${adress}${dir}`, callback);
+                    let pathLength = `${adress}${dir}`.length;
+
+                    app.get(`${adress}${dir}`, 
+                        function(req, res) {
+                            let getQuery = req.originalUrl.substring(pathLength, req.originalUrl.length)
+                            res.redirect(307, `${adress}${getQuery}`);
+                        }
+                    );
                 }
             );
         };
@@ -76,4 +118,4 @@ module.exports = Server;
 
 ////////////////////////////////
 
-Log.Success(`Successfully loading module "server_fast".`);
+Log.Success(`Successfully loading module "SmartServer".`);

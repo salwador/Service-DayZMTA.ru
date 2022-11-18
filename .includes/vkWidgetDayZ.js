@@ -1,68 +1,28 @@
-const fetch = require(`node-fetch`);
-const buildQuery = require(`http-build-query`);
+const MTAInfo = require(`../project_modules/MTAInfo`);
+const ServersInfo = require("../project_utils/ServersInfo");
 
 ////////////////////////////////
 
-let ultimateServers = [
-    {
-        name: 'Brown',
-        ip: '78.24.222.215',
-        icon: `27416992_142408`,
-        port: 22003,
-        slots: 40
-    },
-    {
-        name: 'Green',
-        ip: '213.159.209.59',
-        icon: `27416992_142409`,
-        port: 22003,
-        slots: 60
-    },
-    {
-        name: 'Lime',
-        ip: '80.87.203.145',
-        icon: `27416992_142410`,
-        port: 22003,
-        slots: 80
-    },
-    {
-        name: 'Mint',
-        ip: '194.242.45.35',
-        icon: `27416992_142416`,
-        port: 22003,
-        slots: 80
-    },
-    {
-        name: 'Blue',
-        ip: '68.168.210.78',
-        icon: `27416992_142412`,
-        port: 22003,
-        slots: 80
-    },
-    {
-        name: 'Marengo',
-        ip: '68.168.210.97',
-        icon: `27416992_142413`,
-        port: 22003,
-        slots: 80
-    },
-    {
-        name: 'Dark',
-        ip: '194.242.45.54',
-        icon: `27416992_142417`,
-        port: 22003,
-        slots: 80
-    },
-    {
-        name: 'Olive',
-        ip: '213.159.209.20',
-        icon: `27416992_142415`,
-        port: 22003,
-        slots: 80
-    },
-];
+const fetch = require(`node-fetch`);
+const buildQuery = require(`http-build-query`);
+const Server = require("../project_modules/SmartServer");
 
-let dayzToken = `d3450a148bb8689d67a15cf4ac72faccd4a01bf439ddbebea817208c1a163c84e70daa217cd44596552b0`;
+////////////////////////////////
+
+const serverWidgetIcons = {
+    Brown: `27416992_142408`,
+    Green: `27416992_142409`,
+    Lime: `27416992_142410`,
+    Mint: `27416992_142416`,
+    Blue: `27416992_142412`,
+    Marengo: `27416992_142413`,
+    Dark: `27416992_142417`,
+    Olive: `27416992_142415`
+};
+
+const dayzToken = `d3450a148bb8689d67a15cf4ac72faccd4a01bf439ddbebea817208c1a163c84e70daa217cd44596552b0`;
+
+const allServers = ServersInfo.getAll();
 
 ////////////////////////////////
 
@@ -92,17 +52,15 @@ let refreshDayZWidget = async function () {
         body: []
     };
 
-    for (let serverID in ultimateServers) {
-        let serverNumber = parseInt(serverID) + 1;
-        let serverInfo = ultimateServers[serverID];
+    for (let serverInfo of allServers) {
         let liveServerInfo = await MTAInfo.getStatus(serverInfo.ip, serverInfo.port);
 
         if (!liveServerInfo) {
             body.body.push(
                 [
                     {
-                        text: `Сервер #${serverNumber} «${serverInfo.name}»`,
-                        icon_id: serverInfo.icon
+                        text: `Сервер #${serverInfo.id} «${serverInfo.name}»`,
+                        icon_id: serverWidgetIcons[serverInfo.name]
                     },
                     {
                         text: `${serverInfo.ip}:${serverInfo.port}`
@@ -121,8 +79,8 @@ let refreshDayZWidget = async function () {
         body.body.push(
             [
                 {
-                    text: `Сервер #${serverNumber} «${serverInfo.name}»`,
-                    icon_id: serverInfo.icon
+                    text: `Сервер #${serverInfo.id} «${serverInfo.name}»`,
+                    icon_id: serverWidgetIcons[serverInfo.name]
                 },
                 {
                     text: `${serverInfo.ip}:${serverInfo.port}`
